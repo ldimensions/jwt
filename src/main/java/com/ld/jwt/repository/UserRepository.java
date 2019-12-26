@@ -1,0 +1,30 @@
+package com.ld.jwt.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.ld.jwt.entity.User;
+
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+	@EntityGraph(attributePaths = "authorities")
+	Optional<User> findOneWithAuthoritiesByUserName(String username);
+
+   	@EntityGraph(attributePaths = "authorities")
+   	Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
+
+   	boolean existsByUserName(String email);
+	boolean existsByEmail(String email);
+    
+//    @Query("select u.firstName, a.name as authority_name, p.permission_name from User u " +
+//            "left join user_authority ua on ua.user_id = u.id " +
+//            "left join authority a on a.id = ua.authority_id " +
+//            "left join role_permissions rp on rp.authority_id = a.id " +
+//            "left join permission p on p.id = rp.permission_id " +
+//            "where u.id = ?1")
+//    int getRolesPermission(@Param("id") Long id);
+}
