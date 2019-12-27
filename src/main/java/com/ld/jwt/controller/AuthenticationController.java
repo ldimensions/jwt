@@ -60,17 +60,7 @@ public class AuthenticationController {
 
       Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
       SecurityContextHolder.getContext().setAuthentication(authentication);
-      
-//      log.info("authorities test ----- : {}", userService.getUserWithAuthorities().get().getAuthorities().toArray());
-//      
-//      Object[] color_list = userService.getUserWithAuthorities().get().getAuthorities().toArray();
-//      
-//      for (Object value : color_list){
-//          System.out.println("Color = " + value);
-//       } 
-      
-      //log.info("authorities test 1 ----- : {}", color_list[0]);
-      //log.info("authorities test 2 ----- : {}", color_list[1].);
+     
 
 
       boolean rememberMe = (loginDto.isRememberMe() == null) ? false : loginDto.isRememberMe();
