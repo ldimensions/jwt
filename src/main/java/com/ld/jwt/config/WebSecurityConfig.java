@@ -96,15 +96,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          // .antMatchers("/api/account/reset-password/init").permitAll()
          // .antMatchers("/api/account/reset-password/finish").permitAll()
 
-         .antMatchers("/api/person").hasAuthority("ROLE_USER")
-         .antMatchers("/api/hiddenmessage").hasAuthority("ROLE_ADMIN")
+         //.antMatchers("/api/person").hasAuthority("ROLE_USER")
+         //.antMatchers("/api/hiddenmessage").hasAuthority("ROLE_ADMIN")
          
          //https://www.journaldev.com/8748/spring-security-role-based-access-authorization-example
          //https://www.baeldung.com/spring-security-method-security
          
          
          //.antMatchers("/homePage").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')") 
-         //.antMatchers("/userPage").access("hasRole('ROLE_USER')")
+         //.antMatchers("/api/profile").access("hasAuthority('ROLE_SADMIN')")
 
          .anyRequest().authenticated()
 

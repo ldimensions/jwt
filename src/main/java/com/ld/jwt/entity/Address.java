@@ -26,7 +26,7 @@ public class Address {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 	
 	@Column(name = "is_primary", columnDefinition="INT(1) COMMENT '0 - Secondary, 1 - Primary'")
 	private Integer isPrimary;
@@ -74,7 +74,7 @@ public class Address {
 
 	public Address() {}
 
-	public Address(Integer id, Integer isPrimary, String address1, String address2, String city, String country,
+	public Address(Long id, Integer isPrimary, String address1, String address2, String city, String country,
 			String state, String zip, Integer status, Date createdAt, Date updatedAt, Integer lastModifiedBy,
 			User user) {
 		super();
@@ -93,11 +93,11 @@ public class Address {
 		this.user = user;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

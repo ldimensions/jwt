@@ -24,8 +24,17 @@ public class UserService {
 		return userRepository.existsByUserName(userName);
 	}
 	
+	public boolean userNameExistService(String userName) {
+		return userRepository.existsByEmail(userName);
+	}
+	
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+    
+    public Long getUserId(String userName) {
+    	User user =  userRepository.findByUserName(userName);
+    	return user.getId();
     }
 
 }
