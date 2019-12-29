@@ -6,6 +6,7 @@ import com.ld.jwt.entity.User;
 import com.ld.jwt.jwt.JWTFilter;
 import com.ld.jwt.jwt.TokenProvider;
 import com.ld.jwt.model.Login;
+import com.ld.jwt.model.RolePermissionModel;
 import com.ld.jwt.service.UserService;
 import com.ld.jwt.service.ValidationService;
 
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -39,9 +42,8 @@ import javax.validation.Valid;
 public class AuthenticationController {
 
    private final TokenProvider tokenProvider;
-	private final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
+   private final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 
-   
    private final UserService userService;
 
    private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -61,10 +63,17 @@ public class AuthenticationController {
       Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
       SecurityContextHolder.getContext().setAuthentication(authentication);
      
-
-
+      User user = userService.getUserDetails(loginDto.getUsername());
+      
+      Set<Authority> authority = user.getAuthorities();
+      
+      ArrayList<String> permission = new ArrayList<String>();
+      for(Integer i = 0; i< authority.iterator().next().getPermissions().size(); i++) {
+    	  permission.add(authority.iterator().next().getPermissions().get(i).getPermissionName().toString());
+      }
+      
       boolean rememberMe = (loginDto.isRememberMe() == null) ? false : loginDto.isRememberMe();
-      String jwt = tokenProvider.createToken(authentication, rememberMe);
+      String jwt = tokenProvider.createToken(authentication, rememberMe, permission);
       
       HttpHeaders httpHeaders = new HttpHeaders();
       httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);

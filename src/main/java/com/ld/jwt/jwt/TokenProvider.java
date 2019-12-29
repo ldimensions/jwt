@@ -27,6 +27,7 @@ public class TokenProvider implements InitializingBean {
    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
    private static final String AUTHORITIES_KEY = "role";
+   private static final String AUTHORITIES_PERMISSION = "permission";
 
    private final String base64Secret;
    private final long tokenValidityInMilliseconds;
@@ -50,7 +51,7 @@ public class TokenProvider implements InitializingBean {
       this.key = Keys.hmacShaKeyFor(keyBytes);
    }
 
-   public String createToken(Authentication authentication, boolean rememberMe) {
+   public String createToken(Authentication authentication, boolean rememberMe, List permission) {
       
       List<String> authorities = authentication.getAuthorities().stream()
     	         .map(GrantedAuthority::getAuthority)
@@ -64,12 +65,10 @@ public class TokenProvider implements InitializingBean {
          validity = new Date(now + this.tokenValidityInMilliseconds);
       }
       
-      //log.info("authorities--- : {}", authorities);
-
       return Jwts.builder()
          .setSubject(authentication.getName())
          .claim(AUTHORITIES_KEY, authorities)
-         //.claim(AUTHORITIES_KEY, authorities)
+         .claim(AUTHORITIES_PERMISSION, permission)
          .signWith(key, SignatureAlgorithm.HS512)
          .setExpiration(validity)
          .compact();

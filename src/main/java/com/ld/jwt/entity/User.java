@@ -83,6 +83,7 @@ public class User {
    private Integer lastModifiedBy;
 	
    @ManyToOne(fetch=FetchType.LAZY)
+   @JsonManagedReference
    private Agency agency;
    
    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)

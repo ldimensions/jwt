@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ld.jwt.entity.Agency;
 import com.ld.jwt.entity.Authority;
 
@@ -40,6 +41,7 @@ public class Authority {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="agency_id")
+	@JsonManagedReference
 	private Agency agency;
     
     @ManyToMany

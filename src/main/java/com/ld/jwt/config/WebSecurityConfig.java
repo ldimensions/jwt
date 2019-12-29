@@ -103,8 +103,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          //https://www.baeldung.com/spring-security-method-security
          
          
-         //.antMatchers("/homePage").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')") 
-         //.antMatchers("/api/profile").access("hasAuthority('ROLE_SADMIN')")
+         //.antMatchers("/api/profile").access("hasRole('ROLE_SAdmin') or hasRole('ROLE_SADMIN')") 
+         //.antMatchers("/api/profile").access("hasAuthority('SAdmin')")
+         //.antMatchers("/api/profile").access("hasRole('ROLE_SAdmin')")
 
          .anyRequest().authenticated()
 

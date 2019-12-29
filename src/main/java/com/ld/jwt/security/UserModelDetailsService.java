@@ -45,7 +45,7 @@ public class UserModelDetailsService implements UserDetailsService {
    @Override
    @Transactional
    public UserDetails loadUserByUsername(final String login) {
-      log.debug("Authenticating user '{}'", login);
+      //log.info("Authenticating user '{}'", login);
 
       if (new EmailValidator().isValid(login, null)) {
          return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(login)

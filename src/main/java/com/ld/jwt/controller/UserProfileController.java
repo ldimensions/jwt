@@ -2,12 +2,17 @@ package com.ld.jwt.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ld.jwt.model.AddressModel;
+import com.ld.jwt.model.PasswordModel;
 import com.ld.jwt.model.PhoneModel;
 import com.ld.jwt.model.ProfileModel;
 import com.ld.jwt.entity.Address;
@@ -36,8 +42,11 @@ public class UserProfileController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@GetMapping("/profile")
-//	@PreAuthorize("hasRole('SAdmin')")
+	@PreAuthorize("hasAuthority('[SAdmin]') or hasAuthority('[Admin]')")
 	public ResponseEntity<?> userProfile(Principal principal) {
 		
 		UserProfileModel userProfile = userProfileService.getProfile(principal.getName());		
@@ -95,5 +104,40 @@ public class UserProfileController {
 		}
 		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 	}
+	
+	@RequestMapping(value = "/password", method = RequestMethod.POST)
+	public ResponseEntity<?> passwordUpdate(Principal principal, @RequestBody PasswordModel password) {
+		
+		
+		Long userId = userService.getUserId(principal.getName());
+		
+		log.info("----- {}",password);
+		
+		if(userProfileService.updatePassword(password, userId) == 1) {
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	
+	@GetMapping("/test")
+	//@PreAuthorize("hasAuthority('SAdmin')")
+	public boolean userProfile(Authentication authentication) {
+		
+		//String encodedPassword = bCryptPasswordEncoder.encode("admin");
+		
+//		String password = "admin";
+//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//		String hashedPassword = passwordEncoder.encode(password);
+		
+		
+		System.out.println("-----------------"+passwordEncoder.encode("test"));
+		
+		boolean hasUserRole = authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("[SAdmin]"));
+		System.out.println("-----------------"+hasUserRole);
+		System.out.println("-----------------"+authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+		return hasUserRole;
+   }
 
 }

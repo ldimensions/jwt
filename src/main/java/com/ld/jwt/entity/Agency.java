@@ -19,6 +19,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @SQLDelete(sql="update agency set status = 0 where id=?")
@@ -35,9 +38,11 @@ public class Agency {
     private String agency_name;
     
 	@OneToMany(mappedBy="agency", fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<User> user = new ArrayList<>();
 	
 	@OneToMany(mappedBy="agency", fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<Authority> role = new ArrayList<>();
     
     @Column(name = "status", columnDefinition="INT(1) COMMENT '0 - Deleted, 1 - Active, 2 - Pending, 3 - In-active'")
@@ -231,7 +236,12 @@ public class Agency {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
-	
-	
+	@Override
+	public String toString() {
+		return "Agency [id=" + id + ", agency_name=" + agency_name + ", status="
+				+ status + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", country="
+				+ country + ", state=" + state + ", zip=" + zip + ", phone1=" + phone1 + ", phone2=" + phone2
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", lastModifiedBy=" + lastModifiedBy + "]";
+	}
 
 }

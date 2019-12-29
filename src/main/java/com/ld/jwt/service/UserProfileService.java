@@ -6,9 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ld.jwt.model.AddressModel;
+import com.ld.jwt.model.PasswordModel;
 import com.ld.jwt.model.PhoneModel;
 import com.ld.jwt.model.ProfileModel;
 import com.ld.jwt.model.UserProfileModel;
@@ -30,6 +32,9 @@ public class UserProfileService {
 	
 	@Autowired 
 	private PhoneRepository phoneRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private final Logger log = LoggerFactory.getLogger(UserProfileService.class);
 	
@@ -104,6 +109,11 @@ public class UserProfileService {
     		}    		
 		}
     	return returnVal;
+    }
+    
+    public Integer updatePassword(PasswordModel passwordObj, Long userId) {
+    	String password = passwordEncoder.encode(passwordObj.getPassword());
+		return userRepository.updatePassword(password, userId);    	
     }
 
 }
